@@ -1,5 +1,9 @@
 package main
 
+import (
+	app "banking/app"
+)
+
 func main() {
-	Start()
+	app.Start()
 }
