@@ -4,7 +4,10 @@ import (
 	"banking/service"
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Customer struct {
@@ -18,11 +21,6 @@ type CustomerHandlers struct {
 }
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	// customers := []Customer{
-	// 	{Name: "Anish", City: "New Delhi", ZipCode: "110075"},
-	// 	{Name: "Rob", City: "New Delhi", ZipCode: "110075"},
-	// }
-
 	customers, _ := ch.service.GetAllCustomer()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
@@ -33,4 +31,23 @@ func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Reque
 		json.NewEncoder(w).Encode(customers)
 	}
 
+}
+
+func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+
+	customer, err := ch.service.GetCustomer(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, err.Error())
+	} else {
+		if r.Header.Get("Content-Type") == "application/xml" {
+			w.Header().Add("Content-Type", "application/xml")
+			xml.NewEncoder(w).Encode(customer)
+		} else {
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(customer)
+		}
+	}
 }
