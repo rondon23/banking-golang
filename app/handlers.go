@@ -39,8 +39,8 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 
 	customer, err := ch.service.GetCustomer(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, err.Error())
+		w.WriteHeader(err.Code)
+		fmt.Fprint(w, err.Message)
 	} else {
 		if r.Header.Get("Content-Type") == "application/xml" {
 			w.Header().Add("Content-Type", "application/xml")
