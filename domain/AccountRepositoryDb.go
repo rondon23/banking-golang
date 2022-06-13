@@ -42,7 +42,7 @@ func (d AccountRepositoryDb) SaveTransaction(t Transaction) (*Transaction, *errs
 
 	//inserting bank account transaction
 	result, _ := tx.Exec(`INSERT INTO transactions (account_id, amount, transaction_type, transaction_date)
-																						values (? ? ? ?)`, t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
+							 values (?, ?, ?, ?)`, t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
 
 	// updating account balance
 	if t.IsWithdrawal() {
@@ -65,7 +65,7 @@ func (d AccountRepositoryDb) SaveTransaction(t Transaction) (*Transaction, *errs
 		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
 	// getting the last transaction ID from the transacton table
-	TransactionId, err := result.LastInsertId()
+	transactionId, err := result.LastInsertId()
 	if err != nil {
 		logger.Error("Error while getting the last transaction for bank account: " + err.Error())
 		return nil, errs.NewUnexpectedError("Unexpected database error")
@@ -76,7 +76,7 @@ func (d AccountRepositoryDb) SaveTransaction(t Transaction) (*Transaction, *errs
 	if AppErr != nil {
 		return nil, AppErr
 	}
-	t.TransactionId = strconv.FormatInt(TransactionId, 10)
+	t.TransactionId = strconv.FormatInt(transactionId, 10)
 
 	//updating the transaction struct with the latest balance
 	t.Amount = account.Amount
