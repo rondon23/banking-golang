@@ -9,6 +9,7 @@ import (
 
 type AccountService interface {
 	NewAccount(dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
+	MakeTransaction(request dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError)
 }
 
 type DefaultAccountService struct {
@@ -33,6 +34,37 @@ func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.NewAc
 		return nil, err
 	}
 	response := newAccount.ToNewAccountResponseDto()
+	return &response, nil
+}
+
+func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError) {
+	// incoming request validation
+	err := req.Validate()
+	if err != req.Validate() {
+		return nil, err
+	}
+	// server side validation for checking the avaliable balance in the acccount
+	if req.IsTransactionTypeWithdrawal() {
+		account, err := s.repo.FindById(req.AccountId)
+		if err != nil {
+			return nil, err
+		}
+		if !account.CanWithDrawal(req.Amount) {
+			return nil, errs.NewValidationError("Isufficient balance in the account")
+		}
+	}
+	// if all is well, build the domain object & save the transaction
+	t := domain.Transaction{
+		AccountId:       req.AccountId,
+		Amount:          req.Amount,
+		TransactionType: req.TransactionType,
+		TransactionDate: req.TransactionDate,
+	}
+	transaction, appError := s.repo.SaveTransaction(t)
+	if appError != nil {
+		return nil, appError
+	}
+	response := transaction.ToDto()
 	return &response, nil
 }
 
