@@ -25,11 +25,7 @@ A simple RESTful Banking API developed in Go. This project is designed to manage
 ├── main.go       # Entry point of the application
 ├── go.mod        # Go module definition
 └── go.sum        # Go module checksums
-
-
-yaml
-Copy
-Edit
+```
 
 ---
 
