@@ -17,13 +17,15 @@ A simple RESTful Banking API developed in Go. This project is designed to manage
 
 ## 🏗️ Project Structure
 
+```plaintext
 .
-├── app/ # HTTP Handlers, Middlewares, Router
-├── domain/ # Domain models and business logic
-├── dto/ # Data Transfer Objects for requests and responses
-├── main.go # Entry point of the application
-├── go.mod # Go module definition
-└── go.sum # Go module checksums
+├── app/          # HTTP Handlers, Middlewares, Router
+├── domain/       # Domain models and business logic
+├── dto/          # Data Transfer Objects for requests and responses
+├── main.go       # Entry point of the application
+├── go.mod        # Go module definition
+└── go.sum        # Go module checksums
+
 
 yaml
 Copy
