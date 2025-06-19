@@ -68,7 +68,7 @@ This project follows the principles of **Hexagonal Architecture (Ports and Adapt
 ### 🚀 Clone the repository
 
 ```bash
-git clone https://github.com/your-username/banking-golang.git
+git clone https://github.com/rondon23/banking-golang.git
 cd banking-golang
 ```
 
